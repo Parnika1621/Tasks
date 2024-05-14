@@ -1,0 +1,83 @@
+Task 4:
+
+1. There is a list of students data each having name, age, course, marks, grade. Show the following:
+a. Show the student whose marks are greater than 90 and has an A grade. 
+b. If students marks are less than 50, show with an F grade. 
+c. Students between 50 to 90 are average students with B grades. 
+d. Display the total sum of all students marks. 
+e. Sort students list in ascending order and display.
+f. Filter students list such that there is no F grade.
+
+
+07/05/24
+Task Completed
+
+//Student.jsx
+
+import React, { useState } from 'react';
+
+const Student = () => {
+  const initialStudents = [
+    { name: 'abc', age: 20, course: 'Computer Science', marks: 92, grade: 'A' },
+    { name: 'def', age: 22, course: 'Mathematics', marks: 85, grade: 'B' },
+    { name: 'Pinky', age: 19, course: 'Physics', marks: 75, grade: 'B' },
+    { name: 'fgh', age: 21, course: 'Biology', marks: 48, grade: 'F' },
+    { name: 'xyz', age: 23, course: 'Chemistry', marks: 68, grade: 'B' },
+  ];
+
+  const [students, setStudents] = useState(initialStudents);
+  const [output, setOutput] = useState('');
+
+  const handleStudentData = () => {
+    const updatedStudents = [...students];
+
+    //Show the student whose marks are greater than 90 and has an A grade
+
+    const excellentStudents = students.filter(student => student.marks > 90 && student.grade === 'A');
+    setOutput(`Excellent Students: ${JSON.stringify(excellentStudents)}`);
+
+    //If students' marks are less than 50, show them with an F grade
+
+    updatedStudents.forEach(student => {
+      if (student.marks < 50) {
+        student.grade = 'F';
+      }
+    });
+    setOutput(prevOutput => prevOutput + `\nFailed Students: ${JSON.stringify(updatedStudents)}`);
+
+    //Students between 50 to 90 are average students with B grades
+
+    updatedStudents.forEach(student => {
+      if (student.marks >= 50 && student.marks <= 90) {
+        student.grade = 'B';
+      }
+    });
+    setOutput(prevOutput => prevOutput + `\nAverage Students: ${JSON.stringify(updatedStudents)}`);
+
+    //Display the total sum of all students' marks
+
+    const totalMarks = students.reduce((sum, student) => sum + student.marks, 0);
+    setOutput(prevOutput => prevOutput + `\nTotal Marks: ${totalMarks}`);
+
+    //Sort students' list in ascending order and display
+
+    const sortedStudents = [...students].sort((a, b) => a.marks - b.marks);
+    setOutput(prevOutput => prevOutput + `\nSorted Students: ${JSON.stringify(sortedStudents)}`);
+
+    //Filter students' list such that there is no F grade
+    const passedStudents = students.filter(student => student.grade !== 'F');
+    setOutput(prevOutput => prevOutput + `\nPassed Students: ${JSON.stringify(passedStudents)}`);
+  };
+
+  return (
+    <div>
+      <h2>Student Data</h2>
+      <button onClick={handleStudentData}>Process Student Data</button>
+      <div>
+        <pre>{output}</pre>
+      </div>
+    </div>
+  );
+};
+
+export default Student;

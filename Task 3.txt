@@ -1,0 +1,258 @@
+Question 1:
+Create a manual signup form (html/custom with validations):
+1. User name
+2. Email
+3. Password
+4. Select Subject from dropdown
+5. Gender (Radio button)
+6. Select Hobbies (Checkbox)
+7. Submit button
+
+02/05/24
+Task Completed
+
+//Signup form.jsx
+
+import React, { useState } from 'react';
+function SignupForm() {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    subject: '',
+    gender: '',
+    hobbies: [],
+  });
+
+  const [errors, setErrors] = useState({
+    username: '',
+    email: '',
+    password: '',
+    subject: '',
+    gender: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox') {
+      if (checked) {
+        setFormData((prevData) => ({
+          ...prevData,
+          hobbies: [...prevData.hobbies, value],
+        }));
+      } else {
+        setFormData((prevData) => ({
+          ...prevData,
+          hobbies: prevData.hobbies.filter((hobby) => hobby !== value),
+        }));
+      }
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const errorsCopy = { ...errors };
+
+    // Username validation
+    if (formData.username.length < 3) {
+      errorsCopy.username = 'Username must be at least 3 characters long.';
+      isValid = false;
+    } else {
+      errorsCopy.username = '';
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      errorsCopy.email = 'Invalid email format.';
+      isValid = false;
+    } else {
+      errorsCopy.email = '';
+    }
+
+    // Password validation
+    if (formData.password.length < 6) {
+      errorsCopy.password = 'Password must be at least 6 characters long.';
+      isValid = false;
+    } else {
+      errorsCopy.password = '';
+    }
+
+    // Subject validation
+    if (formData.subject === '') {
+      errorsCopy.subject = 'Please select a subject.';
+      isValid = false;
+    } else {
+      errorsCopy.subject = '';
+    }
+
+    // Gender validation
+    if (formData.gender === '') {
+      errorsCopy.gender = 'Please select a gender.';
+      isValid = false;
+    } else {
+      errorsCopy.gender = '';
+    }
+
+    setErrors(errorsCopy);
+    return isValid;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      // Form is valid, you can submit data or perform further actions here
+      console.log('Form submitted:', formData);
+    } else {
+      console.log('Form has errors, please correct them.');
+    }
+  };
+
+  return (
+    <div>
+      <h2>Signup Form</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="username">User Name:</label><br />
+          <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} required /><br />
+          <span className="error">{errors.username}</span>
+        </div>
+        <div>
+          <label htmlFor="email">Email:</label><br />
+          <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required /><br />
+          <span className="error">{errors.email}</span>
+        </div>
+        <div>
+          <label htmlFor="password">Password:</label><br />
+          <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required /><br />
+          <span className="error">{errors.password}</span>
+        </div>
+        <div>
+          <label htmlFor="subject">Subject:</label><br />
+          <select id="subject" name="subject" value={formData.subject} onChange={handleChange} required>
+            <option value="">Select Subject</option>
+            <option value="math">Math</option>
+            <option value="science">Science</option>
+            <option value="history">History</option>
+          </select><br />
+          <span className="error">{errors.subject}</span>
+        </div>
+        <div>
+          <label>Gender:</label><br />
+          <input type="radio" id="male" name="gender" value="male" checked={formData.gender === 'male'} onChange={handleChange} /> <label htmlFor="male">Male</label>
+          <input type="radio" id="female" name="gender" value="female" checked={formData.gender === 'female'} onChange={handleChange} /> <label htmlFor="female">Female</label>
+          <input type="radio" id="other" name="gender" value="other" checked={formData.gender === 'other'} onChange={handleChange} /> <label htmlFor="other">Other</label><br />
+          <span className="error">{errors.gender}</span>
+        </div>
+        <div>
+          <label htmlFor="hobbies">Hobbies:</label><br />
+          <input type="checkbox" id="reading" name="hobbies" value="reading" onChange={handleChange} /> <label htmlFor="reading">Reading</label>
+          <input type="checkbox" id="gaming" name="hobbies" value="gaming" onChange={handleChange} /> <label htmlFor="gaming">Gaming</label>
+          <input type="checkbox" id="cooking" name="hobbies" value="cooking" onChange={handleChange} /> <label htmlFor="cooking">Cooking</label><br />
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default SignupForm;
+
+
+Question 2:
+Create an advanced form using AntDesign:
+1. Username
+2. Multiselect subjects
+3. Birthday (date)
+4. Age: number input
+5. Submit
+(Buildin validations)
+
+
+//Ant.jsx
+
+import React from 'react';
+import { Button, Checkbox, Form, Input } from 'antd';
+const onFinish = (values) => {
+  console.log('Success:', values);
+};
+const onFinishFailed = (errorInfo) => {
+  console.log('Failed:', errorInfo);
+};
+const Ant = () => (
+  <Form
+    name="basic"
+    labelCol={{
+      span: 8,
+    }}
+    wrapperCol={{
+      span: 16,
+    }}
+    style={{
+      maxWidth: 600,
+    }}
+    initialValues={{
+      remember: true,
+    }}
+    onFinish={onFinish}
+    onFinishFailed={onFinishFailed}
+    autoComplete="off"
+  >
+    <Form.Item
+      label="Username"
+      name="username"
+      rules={[
+        {
+          required: true,
+          message: 'Please input your username!',
+        },
+      ]}
+    >
+      <Input />
+    </Form.Item>
+
+    <Form.Item
+      label="Password"
+      name="password"
+      rules={[
+        {
+          required: true,
+          message: 'Please input your password!',
+        },
+      ]}
+    >
+      <Input.Password />
+    </Form.Item>
+
+    <Form.Item
+      name="remember"
+      valuePropName="checked"
+      wrapperCol={{
+        offset: 8,
+        span: 16,
+      }}
+    >
+      <Checkbox>Remember me</Checkbox>
+    </Form.Item>
+
+    <Form.Item
+      wrapperCol={{
+        offset: 8,
+        span: 16,
+      }}
+    >
+      <Button type="primary" htmlType="submit">
+        Submit
+      </Button>
+    </Form.Item>
+  </Form>
+);
+export default Ant;
+

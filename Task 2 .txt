@@ -1,0 +1,154 @@
+Task 2: 
+
+Create 3 layered components. 
+1. Main component should have data of 5 students - array of objects (parameters: name, age, status, enrolledIn, marks). 
+2. ⁠There should be 3 buttons on main component. 
+3. ⁠When clicking first button, it should pass props to second component and display data in a table (table in second component). 
+4. ⁠when clicking second button, it should display no record found (use useeffect and usestate)
+5. ⁠when you click third button, it should display a table of students data (useContent)- this table should be in the third component. 
+
+When one button is clicked, then only data should render. When another button is clicked, the data of other buttons should be hidden.
+
+
+Date:30/04/24
+Task completed
+
+//Main component.jsx
+
+import React, { useState } from 'react';
+import TableComponent from './TableComponent';
+import NoRecordComponent from './NoRecordComponent';
+import ContentTableComponent from './ContentTableComponent';
+const MainComponent = () => {
+  const [showTable, setShowTable] = useState(false);
+  const [showNoRecord, setShowNoRecord] = useState(false);
+  const [showContentTable, setShowContentTable] = useState(false);
+  const studentsData = [
+    { name: 'John Doe', age: 22, status: 'Active', enrolledIn: 'Computer Science', marks: 85 },
+    { name: 'Jane Smith', age: 20, status: 'Active', enrolledIn: 'Business Administration', marks: 92 },
+    { name: 'Bob Johnson', age: 24, status: 'Inactive', enrolledIn: 'Electrical Engineering', marks: 78 },
+    { name: 'Alice Williams', age: 21, status: 'Active', enrolledIn: 'Marketing', marks: 88 },
+    { name: 'Tom Brown', age: 23, status: 'Inactive', enrolledIn: 'Computer Science', marks: 75 },
+  ];
+  const handleButtonClick = (option) => {
+    setShowTable(false);
+    setShowNoRecord(false);
+    setShowContentTable(false);
+    if (option === 'table') {
+      setShowTable(true);
+    } else if (option === 'noRecord') {
+      setShowNoRecord(true);
+    } else if (option === 'contentTable') {
+      setShowContentTable(true);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Students Data</h1>
+      <button onClick={() => handleButtonClick('table')}>Show Table</button>
+      <button onClick={() => handleButtonClick('noRecord')}>Show No Record</button>
+      <button onClick={() => handleButtonClick('contentTable')}>Show Content Table</button>
+
+      {showTable && <TableComponent studentsData={studentsData} />}
+      {showNoRecord && <NoRecordComponent />}
+      {showContentTable && <ContentTableComponent studentsData={studentsData} />}
+    </div>
+  );
+};
+
+export default MainComponent;
+
+
+//Table component.jsx
+
+import React from 'react';
+const TableComponent = ({ studentsData }) => {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Status</th>
+          <th>Enrolled In</th>
+          <th>Marks</th>
+        </tr>
+      </thead>
+      <tbody>
+        {studentsData.map((student, index) => (
+          <tr key={index}>
+            <td>{student.name}</td>
+            <td>{student.age}</td>
+            <td>{student.status}</td>
+            <td>{student.enrolledIn}</td>
+            <td>{student.marks}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+export default TableComponent;
+
+//NoRecord component.jsx
+
+import React, { useEffect, useState } from 'react';
+const NoRecordComponent = () => {
+  const [showNoRecord, setShowNoRecord] = useState(false);
+  useEffect(() => {
+    setShowNoRecord(true);
+    return () => {
+      setShowNoRecord(false);
+    };
+  }, []);
+
+  return <>{showNoRecord && <div>No Record Found</div>}</>;
+};
+
+export default NoRecordComponent;
+
+//ContentTable component.jsx
+
+import React, { useEffect, useState } from 'react';
+const ContentTableComponent = ({ studentsData }) => {
+  const [showContentTable, setShowContentTable] = useState(false);
+  useEffect(() => {
+    setShowContentTable(true);
+    return () => {
+      setShowContentTable(false);
+    };
+  }, []);
+
+  return (
+    <>
+      {showContentTable && (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Status</th>
+              <th>Enrolled In</th>
+              <th>Marks</th>
+            </tr>
+          </thead>
+          <tbody>
+            {studentsData.map((student, index) => (
+              <tr key={index}>
+                <td>{student.name}</td>
+                <td>{student.age}</td>
+                <td>{student.status}</td>
+                <td>{student.enrolledIn}</td>
+                <td>{student.marks}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
+  );
+};
+
+export default ContentTableComponent;

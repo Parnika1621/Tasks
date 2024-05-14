@@ -1,0 +1,73 @@
+Exercise:1
+
+1. Create a maze 3x3 such that:
+a. When you click on any box on left side, it increments the original values.
+b. When you click on boxes on right side, it decrements the original values.
+c. When you click on center boxes, it displays sum of both (left, right) values into each box.
+
+Date:26/04/24
+Task completed
+
+//maze.jsx
+
+import React, { useState } from 'react';
+import './Maze.css';
+const Maze = () => {
+  const [maze, setMaze] = useState([
+    [1, 4, 7],
+    [2, 5, 8],
+    [3, 6, 9],
+  ]);
+  const handleCellClick = (rowIndex, colIndex) => {
+    const newMaze = [...maze];
+    if (colIndex === 0) {
+      newMaze[rowIndex][colIndex]++;
+    } else if (colIndex === 2) {
+      newMaze[rowIndex][colIndex]--;
+    } else {   
+      const leftValue = newMaze[rowIndex][colIndex - 1];
+      const rightValue = newMaze[rowIndex][colIndex + 1];
+      newMaze[rowIndex][colIndex] = leftValue + rightValue;
+    }
+    setMaze(newMaze);
+  };
+  return (
+    <div className="maze">
+      {maze.map((row, rowIndex) => (
+        <div key={rowIndex} className="row">
+          {row.map((cell, colIndex) => (
+            <div
+              key={${rowIndex}-${colIndex}}
+              className={cell ${colIndex === 0 ? 'left' : colIndex === 2 ? 'right' : 'center'}}
+              onClick={() => handleCellClick(rowIndex, colIndex)}
+            >
+              {cell}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Maze;
+//Maze.css
+.maze {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .row {
+    display: flex;
+  }
+  
+  .cell {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
